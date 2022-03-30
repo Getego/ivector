@@ -1,7 +1,7 @@
 /*--------------------------------------------------------------------------------------------------*/
 /*      Autor: Georgios Terzoglou                                                                   */
-/*      Copyright (©) 2014 by Georgios Terzoglou                                                    */
-/*      Bug-reports and suggestions to georgios.terzoglou@googlemail.de                             */
+/*      Copyright (Â©) 2014 by Georgios Terzoglou                                                    */
+/*      Bug-reports and suggestions to georgios.terzoglou@googlemail.com                            */
 /*                                                                                                  */
 /*                                                                                                  */
 /*                                                                                                  */

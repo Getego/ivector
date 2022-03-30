@@ -50,15 +50,15 @@
 
 /** iVector use different settings for memory management if desired. **/
 
-/** INFORMATION: For personalized memory Settings looking this lines 128  -  147
+/** INFORMATION: For personalized memory Settings looking this lines 122  -  141
 
   * NOTE: It is not recommended to modify the settings. They could thus degrade the
 		  speed greatly. Keep in mind that by doing these settings apply to all objects!
 
-	* switch for memory management system:        129  -  130
-	* General Settings:                           132  -  133
-	* Constant overflow management settings:      135  -  139
-	* Dynamic overflow management:                141  -  146
+	* switch for memory management system:        123  -  124
+	* General Settings:                           126  -  127
+	* Constant overflow management settings:      129  -  133
+	* Dynamic overflow management:                135  -  140
 */
 
 /* Important informations about the different iterator types:
@@ -86,9 +86,9 @@
 	* MAXIMAL_OVERFLOW           = maximum space required above
 	* REMOVE_IF_IT_IS_LARGER     = limit,delete too much memory
 
- * Activate the constant mode: Ensure the line 130 is commented out!
+ * Activate the constant mode: Ensure the line 124 is commented out!
  * commented out: "#define GT_ACTIVATE_AUTOMATIC_MODE_FOR_OVERFLOW"
- * looking on line 130
+ * looking on line 124
 */
 
 /** Dynamic overflow management
@@ -111,9 +111,9 @@
 
  * The dynamic mode is recommended!
 
- * Activate the dynamic mode: Ensure the line 130 is commented in!
+ * Activate the dynamic mode: Ensure the line 124 is commented in!
  * commented in: "#define  GT_ACTIVATE_AUTOMATIC_MODE_FOR_OVERFLOW"
- * looking on line 130
+ * looking on line 124
 */
 
 #ifndef IVECTOR_H

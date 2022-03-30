@@ -9,7 +9,7 @@
 /*      Using this header at your own risk.                                                         */
 /*                                                                                                  */
 /*                                                                                                  */
-/*      FROM THE LINE 151 TO THE END OF THIS HEADER MODIFICATIONS ARE PROHIBITED !!                 */
+/*      FROM THE LINE 145 TO THE END OF THIS HEADER MODIFICATIONS ARE PROHIBITED !!                 */
 /*                                                                                                  */
 /*                                                                                                  */
 /*                                                                                                  */
@@ -120,7 +120,7 @@
 #define IVECTOR_H
 
 // ------------------------------------MEMORY-SETTINGS-BEGIN------------------------------------ //
-/* switch for memory management system. [check out the line at 93 or 118] */
+/* switch for memory management system. [check out the line at 81 or 117] */
 #define GT_ACTIVATE_AUTOMATIC_MODE_FOR_OVERFLOW      // Switch the Memory management mode
 
 /* startup memory settings [Associated for constant and dynamic mode.] */

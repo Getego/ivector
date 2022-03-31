@@ -9,7 +9,7 @@
 /*      Using this header at your own risk.                                                         */
 /*                                                                                                  */
 /*                                                                                                  */
-/*      FROM THE LINE 145 TO THE END OF THIS HEADER MODIFICATIONS ARE PROHIBITED !!                 */
+/*      FROM THE LINE 147 TO THE END OF THIS HEADER MODIFICATIONS ARE PROHIBITED !!                 */
 /*                                                                                                  */
 /*                                                                                                  */
 /*                                                                                                  */
@@ -140,7 +140,9 @@
 #define INITIAL_BASE_VALUE_FOR_DYNAMIC_MODE        4 // INITIAL_BASE_VALUE
 // -------------------------------------MEMORY-SETTINGS-END------------------------------------- //
 
-
+// -------------------------------------ERROR-SETTINGS-BEGIN------------------------------------ //
+#define GT_CERR_ACTIVE // Commend out to deactivate the cerr calls!
+// -------------------------------------ERROR-SETTINGS-END-------------------------------------- //
 
 // --------------------------------------------------------------------------------------------- //
 // - - - - - - - - - - - - - - - - - - - - DO NOT TOUCH! - - - - - - - - - - - - - - - - - - - - //
@@ -153,10 +155,11 @@
 #include <algorithm>
 
 /** Memory allocation:
- *		Implementation of GT::ALLOCATE to substitute the "new" operator.
- *		The GT_ALLOCATER_T is a Place-Marker of GT::ALLOCATE
+ *  Implementation of GT::ALLOCATE to substitute the "new" operator.
+ *  The GT_ALLOCATER_T is a Place-Marker of GT::ALLOCATE
 */
 #define GT_ALLOCATER_T new
+#define GT_UNUSED(VARNAME) [&VARNAME]{}() // This call is completely optimized away by the compiler.
 
 namespace GT
 {
@@ -223,17 +226,20 @@ namespace GT
 			inline boolean_t operator!=(const self_type &rhs) const;
 			inline self_type operator=(const pointer_t src)
 			{
-				this->ptr = src; return *this;
+				this->ptr = src;
+                return *this;
 			}
 
 			inline self_type operator=(const self_type &src)
 			{
-				this->ptr = src.ptr; return *this;
+				this->ptr = src.ptr;
+                return *this;
 			}
 
 			inline self_tp_c operator=(const pointer_t src) const
 			{
-				this->ptr = src; return *this;
+				this->ptr = src;
+                return *this;
 			}
 	};
 
@@ -258,25 +264,29 @@ namespace GT
 	template<class Base>
 	reverse_iterator_t<Base> reverse_iterator_t<Base>::operator++(int)
 	{
-		this->ptr--; return *this;
+		this->ptr--;
+        return *this;
 	}
 
 	template<class Base>
 	reverse_iterator_t<Base> reverse_iterator_t<Base>::operator++(int) const
 	{
-		this->ptr--; return *this;
+		this->ptr--;
+        return *this;
 	}
 
 	template<class Base>
 	reverse_iterator_t<Base> reverse_iterator_t<Base>::operator++(void)
 	{
-		reverse_iterator_t<Base> i = *this; ptr--; return i;
+		reverse_iterator_t<Base> i = *this; ptr--;
+        return i;
 	}
 
 	template<class Base>
 	reverse_iterator_t<Base> reverse_iterator_t<Base>::operator++(void) const
 	{
-		reverse_iterator_t<Base> i = *this; ptr--; return i;
+		reverse_iterator_t<Base> i = *this; ptr--;
+        return i;
 	}
 
 	template<class Base>
@@ -294,7 +304,8 @@ namespace GT
 	template<class Base>
 	const reverse_iterator_t<Base> reverse_iterator_t<Base>::operator=(const reverse_iterator_t<Base> &src) const
 	{
-		this->ptr = src.ptr; return *this;
+		this->ptr = src.ptr;
+        return *this;
 	}
 
 	/* Struct: Husk:
@@ -320,10 +331,12 @@ namespace GT
 			inline void setHusk(T a, T b, T c, T d);
 			inline Husk<T> operator=(const Husk<T> &src);
 	}; typedef GT::Husk<size_t> husk_t;
+    
 	template<class T> void GT::Husk<T>::setHusk(T a, T b, T c, T d)
 	{	// 1. ascending   2. bearingsCount   3. actualSize   4. actualCapacity
 		this->actualSize = c; this->bearingsCount = b; this->ascending = a; this->actualCapacity = d;
 	}
+    
 	template<class T> Husk<T> GT::Husk<T>::operator=(const Husk<T> &src)
 	{
 		this->ascending = src.ascending;
@@ -409,8 +422,7 @@ namespace GT
 			 * Requires that constructor have a number. */
 			inline explicit iVector(const size_t initCapacity = 0):
 				// 1. ascending   2. bearingsCount   3. actualSize   4. actualCapacity
-				core(INITIAL_BASE_VALUE, 0, 0, initCapacity > ((FIRST_RESERVE_AMOUNT < 1) ?
-																   1 : FIRST_RESERVE_AMOUNT) ?
+				core(INITIAL_BASE_VALUE, 0, 0, initCapacity > ((FIRST_RESERVE_AMOUNT < 1) ? 1 : FIRST_RESERVE_AMOUNT) ?
 						 initCapacity : ((FIRST_RESERVE_AMOUNT < 1) ? 1 : FIRST_RESERVE_AMOUNT)),
 				objects(GT_ALLOCATER_T T[this->core.actualCapacity != 0 ? this->core.actualCapacity : 1]){}
 
@@ -445,8 +457,10 @@ namespace GT
 				}
 				else
 				{
+                    #ifdef GT_CERR_ACTIVE
 					std::cerr << "IN FUNCTION: template<class Y> inline iVector(const iVector<Y> &src);" << std::endl;
 					std::cerr << "is<T, Y>::derived == false -> DATATYPE IS NOT COMPATIBLE!" << std::endl;
+                    #endif
 					this->core.setHusk(INITIAL_BASE_VALUE, 0, 0, (FIRST_RESERVE_AMOUNT < 1) ? 1 : FIRST_RESERVE_AMOUNT);
 					this->objects = GT_ALLOCATER_T T[this->core.actualCapacity != 0 ? this->core.actualCapacity : 1];
 				}
@@ -577,8 +591,10 @@ namespace GT
 					return (Y *)(this->objects);
 				else
 				{
+                    #ifdef GT_CERR_ACTIVE
 					std::cerr << "IN FUNCTION: template<class Y> inline operator Y*() const;" << std::endl;
 					std::cerr << "is<T, Y>::derived == false -> DATATYPE IS NOT COMPATIBLE!" << std::endl;
+                    #endif
 					return null_ptr;
 				}
 			}
@@ -615,8 +631,11 @@ namespace GT
 				}
 				else
 				{
+                    #ifdef GT_CERR_ACTIVE
 					std::cerr << "IN FUNCTION: template<class Y> inline iVector<T> &operator=(iVector<Y> &rhs);" << std::endl;
 					std::cerr << "is<T, Y>::derived == false -> DATATYPE IS NOT COMPATIBLE!" << std::endl;
+                    #endif
+
 				}
 				return *this;
 			}
@@ -695,7 +714,8 @@ namespace GT
 			this->core.operator=(rhs.getCore());
 			this->objects = GT_ALLOCATER_T T[this->capacity()];
 			iterator i = this->begin();
-			for(const_iterator it = rhs.begin(); it != rhs.end(); it++, i++) *i = *it;
+			for(const_iterator it = rhs.begin(); it != rhs.end(); it++, i++)
+                *i = *it;
 		}
 		return *this;
 	}
@@ -707,8 +727,11 @@ namespace GT
 		this->objects = GT_ALLOCATER_T T[(FIRST_RESERVE_AMOUNT < 1) ? 1 : FIRST_RESERVE_AMOUNT];
 		if(this->objects == null_ptr)
 		{	// 1. ascending   2. bearingsCount   3. actualSize   4. actualCapacity
+            #ifdef GT_CERR_ACTIVE
 			std::cerr << "IN FUNCTION: template<class T> void iVector<T>::clear(void);" << std::endl;
 			std::cerr << "NOT ENOUGHT MEMORY." << std::endl;
+            #endif
+
 			return;
 		}
 	}
@@ -728,8 +751,10 @@ namespace GT
 		this->objects = GT_ALLOCATER_T T[newCapacity];
 		if(this->objects == null_ptr)
 		{
+            #ifdef GT_CERR_ACTIVE
 			std::cerr << "IN FUNCTION: template<class T> void iVector<T>::reserve(const size_t newCapacity);" << std::endl;
 			std::cerr << "NOT ENOUGHT MEMORY." << std::endl;
+            #endif
 		}
 		else
 		{
@@ -774,7 +799,8 @@ namespace GT
 		if(!this->empty())
 		{
 			iterator i = GT_ALLOCATER_T T[this->core.actualCapacity], temp = i;
-			for(reverse_iterator r = this->rbegin(); r != this->rend(); r++, i++) *i = *r;
+			for(reverse_iterator r = this->rbegin(); r != this->rend(); r++, i++) 
+                *i = *r;
 			delete[] this->objects;
 			this->objects = temp;
 		}
@@ -789,7 +815,8 @@ namespace GT
 	{
 		iVector<T> temp;
 		for(size_t i=0; i<this->size(); i++)
-			if(i != index) temp.push_back(this->operator[](i));
+			if(i != index) 
+                temp.push_back(this->operator[](i));
 		this->operator=(temp);
 	}
 
@@ -810,9 +837,10 @@ namespace GT
 
 	template<class T> void iVector<T>::erase(const size_t begin, const size_t pieces)
 	{
-		//		iVector<T>::const_iterator iter = &this->operator[](begin);
-		//		this->erase(iter, pieces);
-		for(size_t i=0; i<pieces; i++) this->kill_item(begin);
+		// iVector<T>::const_iterator iter = &this->operator[](begin);
+		// this->erase(iter, pieces);
+		for(size_t i=0; i<pieces; i++)
+            this->kill_item(begin);
 	}
 
 	template<class T> T &iVector<T>::operator[](const size_t index)
@@ -853,7 +881,8 @@ namespace GT
 	template<class T> void iVector<T>::push_front(const T &x)
 	{
 		iVector<T> tmp(x, 1);
-		for(iterator i=this->begin(); i!=this->end(); i++) tmp.push_back(*i);
+		for(iterator i=this->begin(); i!=this->end(); i++)
+            tmp.push_back(*i);
 		this->operator=(tmp);
 	}
 
@@ -912,9 +941,11 @@ namespace GT
 		{
 			if(this->core.actualSize != 0)
 			{
+                #ifdef GT_CERR_ACTIVE
 				std::cerr << "IN FUNCTION: template<class T> T &iVector<T>::at(size_t index);" << std::endl;
 				std::cerr << "Caution: The largest possible index of the \"at()\" function is " << this->core.actualSize - 1
 						  << " and you have entered the number " << index << " !!!" << std::endl;
+                #endif
 				return this->operator[](this->core.actualSize - 1);
 			}
 			else
@@ -931,9 +962,11 @@ namespace GT
 		{
 			if(this->core.actualSize != 0)
 			{
+                #ifdef GT_CERR_ACTIVE
 				std::cerr << "IN FUNCTION: template<class T> const T &iVector<T>::at(size_t index) const;" << std::endl;
 				std::cerr << "Caution: The largest possible index of the \"at()\" function is " << this->core.actualSize - 1
 						  << " and you have entered the number " << index << " !!!" << std::endl;
+                #endif
 				return this->back();
 			}
 			else
